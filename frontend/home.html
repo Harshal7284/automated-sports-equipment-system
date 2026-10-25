@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sports Admin (Dark)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        /* Deep Dark Mesh Gradient */
+        body {
+            background-color: #0f172a; 
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #e2e8f0;
+            padding-bottom: 50px;
+        }
+
+        /* Dark Frosted Glass Navbar */
+        .navbar-wrapper { padding: 20px; }
+        .navbar {
+            background: rgba(30, 41, 59, 0.6); 
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-radius: 100px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex; align-items: center; justify-content: space-between; padding: 10px 25px; max-width: 1200px; margin: 0 auto;
+        }
+        
+        .nav-links { display: flex; gap: 10px; align-items: center; }
+        .nav-links a { 
+            text-decoration: none; color: #94a3b8; font-weight: 600; font-size: 14px; 
+            padding: 12px 24px; border-radius: 50px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        .nav-links a:hover { background: rgba(99, 102, 241, 0.2); color: #818cf8; transform: translateY(-2px); }
+        .nav-links a.active { 
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); 
+            color: white; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); 
+        }
+
+        .logout-btn { background: rgba(239, 68, 68, 0.15); color: #f87171 !important; margin-left: auto; }
+        .logout-btn:hover { background: #ef4444 !important; color: white !important; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4); }
+
+        .main-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+
+        .welcome-text h1 {
+            font-size: 3.2rem; font-weight: 700;
+            background: -webkit-linear-gradient(45deg, #818cf8, #f472b6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 10px; letter-spacing: -1px;
+        }
+        .welcome-text p { color: #94a3b8; font-size: 1.1rem; max-width: 600px; line-height: 1.6; }
+
+        /* Dark 3D Cards */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-top: 40px; }
+        .card {
+            background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px);
+            border-radius: 24px; padding: 30px 20px; text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none; color: #f8fafc; position: relative; overflow: hidden;
+        }
+
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; }
+        .card-equipment::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .card-users::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .card-wallets::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .card-tx::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .card-logs::before { background: linear-gradient(90deg, #f43f5e, #fda4af); } /* New Logs Card Border */
+
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255, 255, 255, 0.15); }
+        
+        .icon-wrapper { font-size: 3rem; margin-bottom: 15px; display: inline-block; transition: transform 0.4s ease; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .card:hover .icon-wrapper { transform: scale(1.15) rotate(5deg); }
+        .card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+        .card p { color: #94a3b8; font-size: 0.85rem; }
+
+        /* LIVE RECENT TRANSACTIONS CONTAINER */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 35px; margin-top: 50px; overflow-x: auto;
+        }
+
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;
+        }
+        .section-header h2 { font-size: 1.5rem; font-weight: 700; color: #f8fafc; }
+        .view-all { color: #818cf8; text-decoration: none; font-size: 14px; font-weight: 600; transition: 0.3s; }
+        .view-all:hover { color: #a5b4fc; text-decoration: underline; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { color: #94a3b8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        tr { transition: all 0.2s ease; border-radius: 8px; }
+        tr:hover { background-color: rgba(255, 255, 255, 0.03); transform: translateY(-1px); }
+
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
+        .badge-issued { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .badge-returned { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar-wrapper">
+        <nav class="navbar">
+            <div class="nav-links">
+                <a href="home.html" class="active">🏠 Home</a>
+                <a href="equipment.html">🏀 Equipment</a>
+                <a href="users.html">👥 Users</a>
+                <a href="wallets.html">💰 Wallets</a>
+                <a href="transactions.html">📋 Transactions</a>
+                <a href="logs.html">🧾 Autopay Logs</a>
+            </div>
+            <a href="index.html" class="nav-links logout-btn" style="text-decoration:none; padding:12px 24px; border-radius:50px; font-weight:600; transition:0.3s;">Logout 🚪</a>
+        </nav>
+    </div>
+
+    <div class="main-container">
+        <div class="welcome-text">
+            <h1>Welcome back, Admin.</h1>
+            <p>Your automated sports equipment and fine management system is active. Select a module below to begin.</p>
+        </div>
+
+        <!-- 5 Interactive Module Cards -->
+        <div class="card-grid">
+            <a href="equipment.html" class="card card-equipment">
+                <div class="icon-wrapper">🏀</div>
+                <h3>Equipment</h3>
+                <p>Manage inventory</p>
+            </a>
+            
+            <a href="users.html" class="card card-users">
+                <div class="icon-wrapper">👥</div>
+                <h3>Students</h3>
+                <p>View accounts</p>
+            </a>
+
+            <a href="wallets.html" class="card card-wallets">
+                <div class="icon-wrapper">💰</div>
+                <h3>Wallets</h3>
+                <p>Live balances</p>
+            </a>
+
+            <a href="transactions.html" class="card card-tx">
+                <div class="icon-wrapper">📋</div>
+                <h3>Active Loans</h3>
+                <p>Track due dates</p>
+            </a>
+
+            <!-- The missing Autopay Logs Card! -->
+            <a href="logs.html" class="card card-logs">
+                <div class="icon-wrapper">🧾</div>
+                <h3>Autopay Logs</h3>
+                <p>Review fine receipts</p>
+            </a>
+        </div>
+
+        <!-- NEW: Live Recent Transactions Container -->
+        <div class="glass-panel">
+            <div class="section-header">
+                <h2>⚡ Recent Activity</h2>
+                <a href="transactions.html" class="view-all">View all transactions →</a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tx ID</th>
+                        <th>User ID</th>
+                        <th>Eq. ID</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-data">
+                    <tr><td colspan='4' style="text-align:center; padding: 20px; color: #94a3b8;">Loading live activity...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Fetch only the most recent transactions to display on the home screen
+        async function loadRecentActivity() {
+            try {
+                const res = await fetch("http://127.0.0.1:8000/transactions");
+                const json = await res.json();
+                
+                // Get the last 3 transactions to keep the home page clean
+                const recentTx = json.transactions.slice(-3).reverse(); 
+
+                if (recentTx.length === 0) {
+                    document.getElementById('recent-data').innerHTML = "<tr><td colspan='4' style='text-align:center; color:#94a3b8;'>No recent activity found.</td></tr>";
+                    return;
+                }
+
+                document.getElementById('recent-data').innerHTML = recentTx.map(tx => `
+                    <tr>
+                        <td><strong>#${tx.transaction_id}</strong></td>
+                        <td><small style="color:#64748b; font-family: monospace;">${tx.user_id.substring(0,10)}...</small></td>
+                        <td style="color: #f8fafc; font-weight: 600;">Item ${tx.equipment_id}</td>
+                        <td><span class="badge ${tx.status === 'issued' ? 'badge-issued' : 'badge-returned'}">${tx.status.toUpperCase()}</span></td>
+                    </tr>`).join('');
+            } catch (e) {
+                document.getElementById('recent-data').innerHTML = "<tr><td colspan='4' style='color:#f87171; text-align:center;'>Unable to fetch live activity.</td></tr>";
+            }
+        }
+        
+        window.onload = loadRecentActivity;
+    </script>
+</body>
+</html>

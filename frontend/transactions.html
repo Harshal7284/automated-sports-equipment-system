@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions - Sports Admin (Dark)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: #0f172a; 
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            background-attachment: fixed; min-height: 100vh; color: #e2e8f0;
+        }
+
+        .navbar-wrapper { padding: 20px; }
+        .navbar {
+            background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex; align-items: center; justify-content: space-between; padding: 10px 25px; max-width: 1200px; margin: 0 auto;
+        }
+        .nav-links { display: flex; gap: 10px; align-items: center; }
+        .nav-links a { text-decoration: none; color: #94a3b8; font-weight: 600; font-size: 14px; padding: 12px 24px; border-radius: 50px; transition: all 0.3s ease; }
+        .nav-links a:hover { background: rgba(99, 102, 241, 0.2); color: #818cf8; transform: translateY(-2px); }
+        .nav-links a.active { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); }
+        .logout-btn { background: rgba(239, 68, 68, 0.15); color: #f87171 !important; margin-left: auto; }
+        .logout-btn:hover { background: #ef4444 !important; color: white !important; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4); }
+
+        .main-container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px; overflow-x: auto;
+        }
+
+        .header-title {
+            font-size: 2rem; font-weight: 700; margin-bottom: 25px;
+            background: -webkit-linear-gradient(45deg, #818cf8, #f472b6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        tr { transition: all 0.2s ease; border-radius: 8px; }
+        tr:hover { background-color: rgba(255, 255, 255, 0.03); transform: translateY(-1px); }
+
+        /* Dark Mode Badges */
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+        .badge-issued { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .badge-returned { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    </style>
+</head>
+<body>
+    <div class="navbar-wrapper">
+        <nav class="navbar">
+            <div class="nav-links">
+                <a href="home.html">🏠 Home</a>
+                <a href="equipment.html">🏀 Equipment</a>
+                <a href="users.html">👥 Users</a>
+                <a href="wallets.html">💰 Wallets</a>
+                <a href="transactions.html" class="active">📋 Transactions</a>
+                <a href="logs.html">🧾 Autopay Logs</a>
+            </div>
+            <a href="index.html" class="nav-links logout-btn" style="text-decoration:none; padding:12px 24px; border-radius:50px; font-weight:600; transition:0.3s;">Logout 🚪</a>
+        </nav>
+    </div>
+
+    <div class="main-container">
+        <div class="glass-panel">
+            <h2 class="header-title">Borrowing History</h2>
+            <table>
+                <thead><tr><th>Tx ID</th><th>User ID</th><th>Eq. ID</th><th>Due Date</th><th>Return Date</th><th>Fine</th><th>Status</th></tr></thead>
+                <tbody id="transactions-data"><tr><td colspan='7' style="text-align:center; padding: 30px; color: #94a3b8;">Loading data from FastAPI...</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function loadData() {
+            try {
+                const res = await fetch("http://127.0.0.1:8000/transactions");
+                const json = await res.json();
+                document.getElementById('transactions-data').innerHTML = json.transactions.map(tx => `
+                    <tr>
+                        <td><strong>#${tx.transaction_id}</strong></td>
+                        <td><small style="color:#64748b; font-family: monospace;">${tx.user_id.substring(0,8)}...</small></td>
+                        <td style="color: #f8fafc; font-weight: 600;">Item ${tx.equipment_id}</td>
+                        <td style="color: #cbd5e1;">${new Date(tx.due_date).toLocaleDateString()}</td>
+                        <td style="color: #cbd5e1;">${tx.return_date ? new Date(tx.return_date).toLocaleDateString() : '-'}</td>
+                        <td style="color:${tx.fine_amount > 0 ? '#fb7185' : '#34d399'}; font-weight:bold;">₹${tx.fine_amount}</td>
+                        <td><span class="badge ${tx.status === 'issued' ? 'badge-issued' : 'badge-returned'}">${tx.status.toUpperCase()}</span></td>
+                    </tr>`).join('');
+            } catch (e) {
+                document.getElementById('transactions-data').innerHTML = "<tr><td colspan='7' style='color:#f87171; text-align:center;'>Failed to connect to backend server.</td></tr>";
+            }
+        }
+        window.onload = loadData;
+    </script>
+</body>
+</html>

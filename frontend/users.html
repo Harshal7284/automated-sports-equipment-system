@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users - Sports Admin (Dark)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: #0f172a; 
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            background-attachment: fixed; min-height: 100vh; color: #e2e8f0; padding-bottom: 50px;
+        }
+
+        .navbar-wrapper { padding: 20px; }
+        .navbar {
+            background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex; align-items: center; justify-content: space-between; padding: 10px 25px; max-width: 1200px; margin: 0 auto;
+        }
+        .nav-links { display: flex; gap: 10px; align-items: center; }
+        .nav-links a { text-decoration: none; color: #94a3b8; font-weight: 600; font-size: 14px; padding: 12px 24px; border-radius: 50px; transition: all 0.3s ease; }
+        .nav-links a:hover { background: rgba(99, 102, 241, 0.2); color: #818cf8; transform: translateY(-2px); }
+        .nav-links a.active { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); }
+        .logout-btn { background: rgba(239, 68, 68, 0.15); color: #f87171 !important; margin-left: auto; }
+        .logout-btn:hover { background: #ef4444 !important; color: white !important; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4); }
+
+        .main-container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px; margin-bottom: 30px; overflow-x: auto;
+        }
+
+        .header-title {
+            font-size: 1.6rem; font-weight: 700; margin-bottom: 25px;
+            background: -webkit-linear-gradient(45deg, #818cf8, #f472b6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* 2-Column Grid for Register and Update */
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px; }
+
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; color: #cbd5e1; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .form-group input { 
+            width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 10px; color: white; font-size: 14px; outline: none; transition: 0.3s;
+        }
+        .form-group input:focus { border-color: #818cf8; box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15); }
+
+        .action-btn { 
+            width: 100%; padding: 14px; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px;
+        }
+        .btn-add { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .btn-update { background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); }
+        .action-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        tr { transition: all 0.2s ease; border-radius: 8px; }
+        tr:hover { background-color: rgba(255, 255, 255, 0.03); }
+
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+        .badge-active { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .badge-locked { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+
+        /* Inline Table Action Buttons */
+        .tbl-btn {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 6px 12px; border-radius: 8px; color: white; font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: 0.2s; margin-right: 5px;
+        }
+        .tbl-btn-edit:hover { background: #4f46e5; border-color: #4f46e5; }
+        .tbl-btn-del:hover { background: #ef4444; border-color: #ef4444; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar-wrapper">
+        <nav class="navbar">
+            <div class="nav-links">
+                <a href="home.html">🏠 Home</a>
+                <a href="equipment.html">🏀 Equipment</a>
+                <a href="users.html" class="active">👥 Users</a>
+                <a href="wallets.html">💰 Wallets</a>
+                <a href="transactions.html">📋 Transactions</a>
+                <a href="logs.html">🧾 Autopay Logs</a>
+            </div>
+            <a href="index.html" class="nav-links logout-btn">Logout 🚪</a>
+        </nav>
+    </div>
+
+    <div class="main-container">
+
+        <!-- 2-Column Management Grid -->
+        <div class="action-grid">
+            
+            <!-- 1. REGISTER STUDENT (With Manual Balance) -->
+            <div class="glass-panel" style="margin-bottom: 0; padding: 25px;">
+                <h3 style="color:#34d399; margin-bottom:15px; font-size: 1.2rem;">➕ Register Student</h3>
+                <form id="add-user-form" onsubmit="handleAddUser(event)">
+                    <div class="form-group"><input type="text" id="user-uid" placeholder="Roll No / UID (e.g. 24006034)" required></div>
+                    <div class="form-group"><input type="text" id="user-name" placeholder="Full Name" required></div>
+                    <div class="form-group"><input type="email" id="user-email" placeholder="Email Address" required></div>
+                    <div class="form-group"><input type="number" id="user-balance" placeholder="Initial Wallet Balance (₹)" step="0.5" required></div>
+                    <button type="submit" class="action-btn btn-add">Register Student</button>
+                </form>
+            </div>
+
+            <!-- 2. UPDATE STUDENT -->
+            <div class="glass-panel" style="margin-bottom: 0; padding: 25px;">
+                <h3 style="color:#f472b6; margin-bottom:15px; font-size: 1.2rem;">✏️ Update Student Details</h3>
+                <form id="update-user-form" onsubmit="handleUpdateUser(event)">
+                    <div class="form-group"><input type="text" id="up-user-id" placeholder="Target User ID (UUID - Auto-filled)" required readonly style="background: rgba(15, 23, 42, 0.3); color: #94a3b8;"></div>
+                    <div class="form-group"><input type="text" id="up-user-uid" placeholder="New Roll No / UID" required></div>
+                    <div class="form-group"><input type="text" id="up-user-name" placeholder="New Name" required></div>
+                    <div class="form-group"><input type="email" id="up-user-email" placeholder="New Email" required></div>
+                    <button type="submit" class="action-btn btn-update">Save Changes</button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Registered Students Table -->
+        <div class="glass-panel">
+            <h2 class="header-title">Registered Students</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>UID (Roll No)</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>User ID (UUID)</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="users-data">
+                    <tr><td colspan='6' style="text-align:center; padding: 30px; color: #94a3b8;">Loading data from FastAPI...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+
+        // Fetch and display users with inline Action buttons
+        async function loadUsers() {
+            try {
+                const res = await fetch(`${API_URL}/users`);
+                const json = await res.json();
+                
+                if (json.users.length === 0) {
+                    document.getElementById('users-data').innerHTML = "<tr><td colspan='6' style='text-align:center; color:#94a3b8;'>No registered students found.</td></tr>";
+                    return;
+                }
+
+                document.getElementById('users-data').innerHTML = json.users.map(user => `
+                    <tr>
+                        <td><strong>${user.uid}</strong></td>
+                        <td style="font-weight: 600; color: #f8fafc;">${user.name}</td>
+                        <td style="color: #cbd5e1;">${user.email}</td>
+                        <td><small style="color:#818cf8; font-family: monospace; cursor:pointer;" title="Click to copy UUID" onclick="navigator.clipboard.writeText('${user.user_id}'); alert('Copied UUID to clipboard!');">${user.user_id}</small></td>
+                        <td><span class="badge ${user.account_status === 'active' ? 'badge-active' : 'badge-locked'}">${user.account_status.toUpperCase()}</span></td>
+                        <td>
+                            <button class="tbl-btn tbl-btn-edit" onclick="populateUpdateForm('${user.user_id}', '${user.uid}', '${user.name}', '${user.email}')">✏️ Edit</button>
+                            <button class="tbl-btn tbl-btn-del" onclick="deleteUser('${user.user_id}', '${user.name}')">🗑️ Delete</button>
+                        </td>
+                    </tr>`).join('');
+            } catch (e) {
+                document.getElementById('users-data').innerHTML = "<tr><td colspan='6' style='color:#f87171; text-align:center;'>Failed to connect to backend server.</td></tr>";
+            }
+        }
+
+        // Helper: Populate Update form when clicking Edit on a row
+        function populateUpdateForm(userId, uid, name, email) {
+            document.getElementById('up-user-id').value = userId;
+            document.getElementById('up-user-uid').value = uid;
+            document.getElementById('up-user-name').value = name;
+            document.getElementById('up-user-email').value = email;
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Smooth scroll up to form
+        }
+
+        // Add User (Manual Balance)
+        async function handleAddUser(e) {
+            e.preventDefault();
+            const payload = {
+                uid: document.getElementById('user-uid').value,
+                name: document.getElementById('user-name').value,
+                email: document.getElementById('user-email').value,
+                initial_balance: parseFloat(document.getElementById('user-balance').value)
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/users/add`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if(res.ok) {
+                    alert("✅ Student successfully registered with initial balance!");
+                    e.target.reset();
+                    loadUsers();
+                } else {
+                    alert(`❌ Error: ${data.detail}`);
+                }
+            } catch(err) {
+                alert("Connection error.");
+            }
+        }
+
+        // Update User
+        async function handleUpdateUser(e) {
+            e.preventDefault();
+            const payload = {
+                user_id: document.getElementById('up-user-id').value,
+                uid: document.getElementById('up-user-uid').value,
+                name: document.getElementById('up-user-name').value,
+                email: document.getElementById('up-user-email').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/users/update`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if(res.ok) {
+                    alert("✅ Student updated successfully!");
+                    document.getElementById('update-user-form').reset();
+                    loadUsers();
+                } else {
+                    alert(`❌ Error: ${data.detail}`);
+                }
+            } catch(err) {
+                alert("Connection error.");
+            }
+        }
+
+        // Delete User via row action button
+        async function deleteUser(userId, name) {
+            if (!confirm(`Are you sure you want to permanently delete student: ${name}?`)) return;
+
+            try {
+                const res = await fetch(`${API_URL}/users/delete/${userId}`, {
+                    method: 'DELETE'
+                });
+                if(res.ok) {
+                    alert("✅ Student deleted successfully!");
+                    loadUsers();
+                } else {
+                    alert("❌ Error deleting user.");
+                }
+            } catch(err) {
+                alert("Connection error.");
+            }
+        }
+
+        window.onload = loadUsers;
+    </script>
+</body>
+</html>

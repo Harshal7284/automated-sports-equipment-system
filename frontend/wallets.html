@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallets - Sports Admin (Dark)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: #0f172a; 
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            background-attachment: fixed; min-height: 100vh; color: #e2e8f0; padding-bottom: 50px;
+        }
+
+        .navbar-wrapper { padding: 20px; }
+        .navbar {
+            background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex; align-items: center; justify-content: space-between; padding: 10px 25px; max-width: 1200px; margin: 0 auto;
+        }
+        .nav-links { display: flex; gap: 10px; align-items: center; }
+        .nav-links a { text-decoration: none; color: #94a3b8; font-weight: 600; font-size: 14px; padding: 12px 24px; border-radius: 50px; transition: all 0.3s ease; }
+        .nav-links a:hover { background: rgba(99, 102, 241, 0.2); color: #818cf8; transform: translateY(-2px); }
+        .nav-links a.active { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4); }
+        .logout-btn { background: rgba(239, 68, 68, 0.15); color: #f87171 !important; margin-left: auto; }
+        .logout-btn:hover { background: #ef4444 !important; color: white !important; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4); }
+
+        .main-container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px; margin-bottom: 30px; overflow-x: auto;
+        }
+
+        .header-title {
+            font-size: 1.6rem; font-weight: 700; margin-bottom: 25px;
+            background: -webkit-linear-gradient(45deg, #818cf8, #f472b6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; color: #cbd5e1; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .form-group input { 
+            width: 100%; padding: 12px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 10px; color: white; font-size: 14px; outline: none; transition: 0.3s;
+        }
+        .form-group input:focus { border-color: #818cf8; box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15); }
+
+        .action-btn { 
+            width: 100%; padding: 14px; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); box-shadow: 0 8px 15px rgba(59, 130, 246, 0.2);
+        }
+        .action-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        tr { transition: all 0.2s ease; border-radius: 8px; }
+        tr:hover { background-color: rgba(255, 255, 255, 0.03); }
+
+        .tbl-btn {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 6px 12px; border-radius: 8px; color: white; font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: 0.2s;
+        }
+        .tbl-btn:hover { background: #3b82f6; border-color: #3b82f6; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar-wrapper">
+        <nav class="navbar">
+            <div class="nav-links">
+                <a href="home.html">🏠 Home</a>
+                <a href="equipment.html">🏀 Equipment</a>
+                <a href="users.html">👥 Users</a>
+                <a href="wallets.html" class="active">💰 Wallets</a>
+                <a href="transactions.html">📋 Transactions</a>
+                <a href="logs.html">🧾 Autopay Logs</a>
+            </div>
+            <a href="index.html" class="nav-links logout-btn">Logout 🚪</a>
+        </nav>
+    </div>
+
+    <div class="main-container">
+
+        <!-- Update Wallet Form Panel -->
+        <div class="glass-panel" style="max-width: 600px; margin: 0 auto 30px auto;">
+            <h2 class="header-title" style="font-size: 1.3rem; margin-bottom: 15px;">✏️ Modify Wallet Balance</h2>
+            <form id="update-wallet-form" onsubmit="handleUpdateWallet(event)">
+                <div class="form-group">
+                    <label>Student User ID (UUID)</label>
+                    <input type="text" id="wallet-userid" placeholder="Click 'Edit' on a row below or paste UUID" required readonly style="background: rgba(15, 23, 42, 0.3); color: #94a3b8;">
+                </div>
+                <div class="form-group">
+                    <label>New Balance (₹)</label>
+                    <input type="number" id="wallet-new-balance" placeholder="Enter updated amount" step="0.5" min="0" required>
+                </div>
+                <button type="submit" class="action-btn">Update Balance 💳</button>
+            </form>
+        </div>
+
+        <!-- Wallets Table -->
+        <div class="glass-panel">
+            <h2 class="header-title">Student Digital Wallets</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Wallet ID</th>
+                        <th>User ID (UUID)</th>
+                        <th>Available Balance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="wallets-data">
+                    <tr><td colspan='4' style="text-align:center; padding: 30px; color: #94a3b8;">Loading data from FastAPI...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+
+        async function loadWallets() {
+            try {
+                const res = await fetch(`${API_URL}/wallets`);
+                const json = await res.json();
+                
+                if (json.wallets.length === 0) {
+                    document.getElementById('wallets-data').innerHTML = "<tr><td colspan='4' style='text-align:center; color:#94a3b8;'>No wallets found.</td></tr>";
+                    return;
+                }
+
+                document.getElementById('wallets-data').innerHTML = json.wallets.map(w => `
+                    <tr>
+                        <td><strong>#${w.wallet_id}</strong></td>
+                        <td><small style="color:#818cf8; font-family: monospace; cursor:pointer;" title="Click to copy" onclick="navigator.clipboard.writeText('${w.user_id}'); alert('Copied UUID!');">${w.user_id}</small></td>
+                        <td style="color: #34d399; font-weight: bold; font-size: 1.1rem;">₹${w.balance.toFixed(2)}</td>
+                        <td>
+                            <button class="tbl-btn" onclick="prepareUpdate('${w.user_id}', ${w.balance})">✏️ Edit Balance</button>
+                        </td>
+                    </tr>`).join('');
+            } catch (e) {
+                document.getElementById('wallets-data').innerHTML = "<tr><td colspan='4' style='color:#f87171; text-align:center;'>Failed to connect to backend server.</td></tr>";
+            }
+        }
+
+        function prepareUpdate(userId, currentBalance) {
+            document.getElementById('wallet-userid').value = userId;
+            document.getElementById('wallet-new-balance').value = currentBalance;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function handleUpdateWallet(e) {
+            e.preventDefault();
+            const payload = {
+                user_id: document.getElementById('wallet-userid').value,
+                balance: parseFloat(document.getElementById('wallet-new-balance').value)
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/wallets/update`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if(res.ok) {
+                    alert("✅ Wallet balance updated successfully!");
+                    document.getElementById('update-wallet-form').reset();
+                    document.getElementById('wallet-userid').value = ""; // Clear locked field
+                    loadWallets();
+                } else {
+                    alert(`❌ Error: ${data.detail}`);
+                }
+            } catch(err) {
+                alert("Connection error.");
+            }
+        }
+
+        window.onload = loadWallets;
+    </script>
+</body>
+</html>

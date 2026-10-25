@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Sports System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: #0f172a; 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Prevents scrolling from the floating orbs */
+            color: #e2e8f0;
+            position: relative;
+        }
+
+        /* WOW FEATURE 1: Animated Floating Background Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 10s infinite ease-in-out alternate;
+            z-index: 1;
+        }
+        .orb-1 {
+            width: 400px; height: 400px;
+            background: #4f46e5; /* Indigo */
+            top: -100px; left: -100px;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 350px; height: 350px;
+            background: #ec4899; /* Pink */
+            bottom: -50px; right: -50px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        /* WOW FEATURE 2: Entrance Animation for the Card */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glassmorphism Login Card */
+        .login-card {
+            background: rgba(30, 41, 59, 0.65); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 50px 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            z-index: 10;
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .login-card h2 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            background: -webkit-linear-gradient(45deg, #818cf8, #f472b6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .login-card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        /* WOW FEATURE 3: Glowing Interactive Inputs */
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        /* Vibrant Action Button */
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3);
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(236, 72, 153, 0.4);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #error-msg {
+            color: #fb7185;
+            background: rgba(244, 63, 94, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-top: 20px;
+            display: none;
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Background Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="login-card">
+        <h2>Admin Portal</h2>
+        <p>Sign in to manage the sports inventory</p>
+
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="admin" value="admin">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Hint: admin123">
+        </div>
+        
+        <button id="login-btn" onclick="handleLogin()">Secure Login</button>
+        <p id="error-msg">⚠️ Invalid credentials. Please try again.</p>
+    </div>
+
+    <script>
+        function handleLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const btn = document.getElementById('login-btn');
+            const errorMsg = document.getElementById('error-msg');
+            
+            errorMsg.style.display = 'none';
+
+            if (user === 'admin' && pass === 'admin123') {
+                // WOW FEATURE 4: Premium loading state
+                btn.innerHTML = 'Authenticating... 🔒';
+                btn.style.opacity = '0.8';
+                btn.style.transform = 'scale(0.98)';
+                
+                // Add a slight delay so the user sees the cool button change
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 800);
+            } else {
+                // Shake animation for error
+                errorMsg.style.display = 'block';
+                const card = document.querySelector('.login-card');
+                card.animate([
+                    { transform: 'translateX(0)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(10px)' },
+                    { transform: 'translateX(0)' }
+                ], { duration: 400 });
+            }
+        }
+    </script>
+</body>
+</html>
